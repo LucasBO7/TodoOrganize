@@ -20,7 +20,12 @@ export const Container = styled.div`
 `;
 
 export const ActionsContainer = styled.div`
-  width: 76px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  width: 80px;
+  height: fit-content;
 `;
 
 export const TasksContainer = styled.div`
@@ -35,6 +40,7 @@ export const TasksContainer = styled.div`
 `;
 
 export const ModalContainer = styled(Modal)`
+  /* position: absolute; */
   display: flex;
   flex-direction: column;
   align-items: center;

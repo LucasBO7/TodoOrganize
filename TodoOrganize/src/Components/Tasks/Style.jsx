@@ -7,8 +7,8 @@ export const ContainerTask = styled.div`
   align-items: center;
 
   width: 90%;
-  height: 62px;
-  padding: 0 5px;
+  height: fit-content;
+  padding: 13px 16px;
 
   background-color: ${(props) => (props.isChecked ? "#6C45CE" : "white")};
 
@@ -17,7 +17,9 @@ export const ContainerTask = styled.div`
 `;
 
 // Title
-export const TaskTitle = styled.p`
+export const TaskDescription = styled.p`
+  width: 72%;
+  text-align: justify;
   font-family: "Open Sans";
   font-weight: 600;
   font-size: 15.5px;

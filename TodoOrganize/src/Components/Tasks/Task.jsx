@@ -1,10 +1,9 @@
 /* eslint-disable react/prop-types */
-// import { useState } from "react";
-import { Check } from "../Buttons/Animated/check";
-import { ContainerTask, TaskTitle } from "./Style";
+import { Check } from "../Buttons/Animated/CheckBtn/Check";
+import { ContainerTask, TaskDescription } from "./Style";
 import { ActionsContainer } from "../Containers/Container";
-import { EditBtn } from "../Buttons/Animated/EditBtn";
-import { RemoveBtn } from "../Buttons/Animated/RemoveBtn";
+import { EditBtn } from "../Buttons/Animated/EditBtn/EditBtn";
+import { RemoveBtn } from "../Buttons/Animated/RemoveBtn/RemoveBtn";
 
 export const Task = ({ task, tasks, setTasks, onRemoveClick, onEditClick }) => {
   const { isDone } = task;
@@ -25,7 +24,7 @@ export const Task = ({ task, tasks, setTasks, onRemoveClick, onEditClick }) => {
         }}
       />
 
-      <TaskTitle isChecked={task.isDone}>{task.description}</TaskTitle>
+      <TaskDescription isChecked={task.isDone}>{task.description}</TaskDescription>
 
       <ActionsContainer>
         <EditBtn onClick={() => onEditClick(index)} />

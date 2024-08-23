@@ -12,10 +12,23 @@
 
 .purple-color {
   color: #8758ff;
+  font-family: "Roboto";
+  font-weight: bold;
+  font-size: 30px;
 }
 
 ::-webkit-scrollbar-thumb {
   background-color: blue; /* color of the scroll thumb */
   border-radius: 20px; /* roundness of the scroll thumb */
   border: 3px solid orange; /* creates padding around scroll thumb */
+}
+
+.container-pos-ref {
+  position: relative;
+}
+
+.align-self-left {
+  position: absolute;
+  top: 20px;
+  left: 30px;
 }

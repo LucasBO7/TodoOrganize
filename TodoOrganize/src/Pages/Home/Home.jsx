@@ -1,139 +1,212 @@
 import "./Home.css";
-import { PrimaryButton } from "../../Components/Buttons/Buttons";
-import { Container, ModalContainer, TasksContainer } from "../../Components/Containers/Container";
+import moment from "moment";
+import "moment/dist/locale/pt-br";
+import { PrimaryButton, SndButton } from "../../Components/Buttons/Buttons";
+import {
+  Container,
+  ModalContainer,
+  TasksContainer,
+} from "../../Components/Containers/Container";
 import { IconTextInput, TextInput } from "../../Components/Inputs/Inputs";
 import { MainTite } from "../../Components/Titles/Titles";
-import '../../Components/Table/Table.css';
-import moment from "moment";
+import "../../Components/Table/Table.css";
 import { Task } from "../../Components/Tasks/Task";
 import { useEffect, useState } from "react";
+import { capitalize } from "@mui/material";
 
 export const Home = () => {
-    const [openModal, setOpenModal] = useState(false);
-    const [modalEdit, setModalEdit] = useState(true);
+  // Modal
+  const [openModal, setOpenModal] = useState(false);
+  const [modalEdit, setModalEdit] = useState(true);
 
-    const [tasks, setTasks] = useState(
-        [
-            { id: generateUniqueId(), isDone: false, title: 'Banana', description: 'Comprar um cacho de banana prata.' },
-            { id: generateUniqueId(), isDone: true, title: 'Banana', description: 'Comprar 26 uvas.' },
-            { id: generateUniqueId(), isDone: false, title: 'Banana', description: 'Comprar um quilo de picanha.' },
-            { id: generateUniqueId(), isDone: false, title: 'Banana', description: 'Comprar um quilo de picanha.' },
-            { id: generateUniqueId(), isDone: false, title: 'Banana', description: 'Comprar um quilo de picanha.' }
-        ]
+  const [tasks, setTasks] = useState([
+    {
+      id: generateUniqueId(),
+      isDone: false,
+      title: "Banana",
+      description: "Comprar um cacho de banana prata.",
+    },
+    {
+      id: generateUniqueId(),
+      isDone: true,
+      title: "Banana",
+      description: "Enviar e-mail de feedback para a equipe.",
+    },
+    {
+      id: generateUniqueId(),
+      isDone: false,
+      title: "Banana",
+      description: "Agendar reunião com o cliente para quinta-feira",
+    },
+    {
+      id: generateUniqueId(),
+      isDone: false,
+      title: "Banana",
+      description: "Ler capítulo 5 do livro de Machine Learning.",
+    },
+    {
+      id: generateUniqueId(),
+      isDone: false,
+      title: "Banana",
+      description: "Vender arroz para Neusa",
+    },
+  ]);
+  const [filteredTasks, setFilteredTasks] = useState(null);
+
+  const [newTask, setNewTask] = useState({
+    id: 0,
+    isDone: false,
+    title: "Titulo",
+    description: null,
+  });
+
+  const [searchingText, setSearchingText] = useState("");
+
+  // Gera um Id único utilizando a data atual
+  function generateUniqueId() {
+    return Date.now().toString(36) + Math.random().toString();
+  }
+
+  // Manipuladores do Array
+  function createTask(taskList, newTask) {
+    taskList.push(newTask);
+    onModalClose();
+  }
+  function updateTask(taskList, newTask) {
+    const index = taskList.findIndex((task) => task.id == newTask.id);
+    taskList[index] = { ...taskList[index], description: newTask.description };
+
+    // Muda o modal para
+    setModalEdit(false);
+    onModalClose();
+  }
+
+  // Eventos
+  function onRemoveClick(index) {
+    if (index >= 0) setTasks(tasks.filter((task, i) => i !== index));
+  }
+  function onEditClick(index) {
+    const taskToEdit = tasks[index];
+    setNewTask(taskToEdit);
+    setModalEdit(true);
+    onModalOpen(true);
+  }
+
+  // Modal Functions
+  function onModalClose(isModalEdit) {
+    setOpenModal(false);
+    setModalEdit(isModalEdit);
+
+    // Zera a task criada / editada
+    setNewTask({});
+  }
+  function onModalOpen(isModalEdit) {
+    setOpenModal(true);
+    // newTask.clear();
+    setModalEdit(isModalEdit);
+  }
+  function onSearchInputChange(text) {
+    // Guarda o texto na variável
+    setSearchingText(text);
+
+    // Filtra as tarefas pela busca
+    const result = tasks.filter((task) =>
+      task.description.toLowerCase().startsWith(searchingText.toLowerCase())
     );
 
-    const [newTask, setNewTask] = useState({
-        id: 0,
-        isDone: false,
-        title: 'Titulo',
-        description: null
-    });
+    result.length === 0 ? setFilteredTasks(null) : setFilteredTasks(result);
+  }
 
-    // Gera um Id único utilizando a data atual
-    function generateUniqueId() {
-        return Date.now().toString(36) + Math.random().toString();
-    }
+  useEffect(() => {
+    moment.localeData("pt-br");
+  }, []);
 
+  return (
+    <div className="page-container">
+      <Container>
+        <MainTite fontSize={"24px"}>
+          {capitalize(moment().format("dddd"))},{" "}
+          <span className="purple-color">{moment().format("D")}</span> de{" "}
+          {capitalize(moment().format("MMMM"))}
+        </MainTite>
 
-    // Manipuladores do Array
-    function createTask(taskList, newTask) {
-        taskList.push(newTask);
-        onModalClose();
-    }
-    function updateTask(taskList, newTask) {
-        const index = taskList.findIndex(task => task.id == newTask.id);
-        taskList[index] = { ...taskList[index], description: newTask.description };
+        <IconTextInput
+          searchingText={searchingText}
+          onChange={(text) => onSearchInputChange(text.target.value)}
+        />
 
-        // Muda o modal para 
-        setModalEdit(false);
-        onModalClose();
+        <TasksContainer>
+          {searchingText.length > 0 ? (
+            filteredTasks == null ? (
+              <p>Nenhuma tarefa encontrada!</p>
+            ) : (
+              filteredTasks.map((task) => (
+                <Task
+                  key={task.id}
+                  task={task}
+                  tasks={tasks}
+                  setTasks={setTasks}
+                  onRemoveClick={onRemoveClick}
+                  onEditClick={onEditClick}
+                />
+              ))
+            )
+          ) : (
+            tasks.map((task) => (
+              <Task
+                key={task.id}
+                task={task}
+                tasks={tasks}
+                setTasks={setTasks}
+                onRemoveClick={onRemoveClick}
+                onEditClick={onEditClick}
+              />
+            ))
+          )}
+        </TasksContainer>
+      </Container>
 
-        // Zera a task criada
-        setNewTask({});
-    }
+      <PrimaryButton onClick={() => onModalOpen(false)}>
+        Nova tarefa
+      </PrimaryButton>
 
-    // Eventos
-    function onRemoveClick(index) {
-        if (index >= 0)
-            setTasks(tasks.filter((task, i) => i !== index));
-    }
-    function onEditClick(index) {
-        const taskToEdit = tasks[index];
-        setNewTask(taskToEdit);
-        setModalEdit(true);
-        onModalOpen(true);
-    }
-
-
-    // Modais Functions
-    function onModalClose(isModalEdit) {
-        setOpenModal(false);
-        setModalEdit(isModalEdit);
-    }
-    function onModalOpen(isModalEdit) {
-        setOpenModal(true);
-        // newTask.clear();
-        setModalEdit(isModalEdit);
-    }
-
-    // moment.locale('pt');
-    return (
-        <div className="page-container">
-
-            <Container>
-                <MainTite fontSize={"24px"}>{moment().locale('pt').format('dddd')},  <span className="purple-color">{moment().locale('pt').format('Do')}</span> de  {moment().locale('pt').format('MMMM')}</MainTite>
-
-                <IconTextInput />
-
-
-                <TasksContainer>
-                    {
-                        tasks.length <= 0
-                            ? (
-                                <p>Nenhuma tarefa salva!</p>
-                            )
-                            : (
-                                tasks.map((task) =>
-                                    <Task
-                                        key={task.id}
-                                        task={task}
-                                        tasks={tasks}
-                                        setTasks={setTasks}
-                                        onRemoveClick={onRemoveClick}
-                                        onEditClick={onEditClick}
-                                    />)
-                            )
-                    }
-                </TasksContainer>
-
-            </Container>
-
-            <PrimaryButton onClick={() => onModalOpen(false)}>Nova tarefa</PrimaryButton>
-
-            <ModalContainer
-                open={openModal}
-                aria-labelledby="parent-modal-title"
-                aria-describedby="parent-modal-description"
+      <ModalContainer
+        open={openModal}
+        aria-labelledby="parent-modal-title"
+        aria-describedby="parent-modal-description"
+      >
+        <>
+          <Container className="container-pos-ref">
+            <SndButton
+              className="align-self-left"
+              onClick={() => onModalClose()}
             >
-                <Container>
-                    <PrimaryButton onClick={() => onModalClose()}>sair</PrimaryButton>
+              sair
+            </SndButton>
+            <MainTite fontSize={"32px"}>Descreva sua tarefa</MainTite>
 
-                    <MainTite
-                        fontSize={"32px"}
-                    >Descreva sua tarefa</MainTite>
+            <TextInput
+              width={"63.1%"}
+              height={"177px"}
+              newTask={newTask}
+              setNewTask={setNewTask}
+              value={newTask.description}
+            />
 
-                    <TextInput
-                        width={'63.1%'}
-                        height={'177px'}
-                        newTask={newTask}
-                        setNewTask={setNewTask}
-                        value={newTask.description}
-                    />
-
-                    <PrimaryButton onClick={() => modalEdit ? updateTask(tasks, newTask) : createTask(tasks, newTask)}>Confirmar tarefa</PrimaryButton>
-                </Container>
-            </ModalContainer>
-
-        </div>
-    );
-}
+            <PrimaryButton
+              onClick={() =>
+                newTask.description
+                  ? modalEdit
+                    ? updateTask(tasks, newTask)
+                    : createTask(tasks, newTask)
+                  : null
+              }
+            >
+              Confirmar tarefa
+            </PrimaryButton>
+          </Container>
+        </>
+      </ModalContainer>
+    </div>
+  );
+};

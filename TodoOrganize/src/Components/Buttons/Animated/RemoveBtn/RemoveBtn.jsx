@@ -1,12 +1,11 @@
 import "./remove-btn.css";
+import removeIcon from "../../../../assets/remove-img.png";
 
 export const RemoveBtn = ({ onClick }) => {
   return (
     /* From Uiverse.io by javierBarroso */
     <button className="button" onClick={onClick}>
-      <span className="X"></span>
-      <span className="Y"></span>
-      <div className="close">Close</div>
+      <img className="imgBtn" src={removeIcon} />
     </button>
   );
 };

@@ -1,0 +1,23 @@
+/* From Uiverse.io by javierBarroso */
+.button {
+  padding: 0 !important;
+  width: 34px;
+  height: 34px;
+  border: none;
+  background: transparent;
+  border-radius: 5px;
+  transition: background 0.5s;
+}
+
+.button:hover {
+  background-color: rgb(211, 21, 21);
+}
+
+.button:active {
+  background-color: rgb(130, 0, 0);
+}
+
+.imgBtn {
+  width: 35px;
+  height: 100%;
+}
