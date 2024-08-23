@@ -1,0 +1,10 @@
+@font-face {
+    font-family: 'open-sans';
+    src: local('roboto-regular'), url('./Open_Sans/OpenSans-VariableFont_wdth\,wght.ttf') format('ttf');
+
+}
+
+@font-face {
+    font-family: 'roboto-regular';
+    src: local('roboto-regular'), url('./Roboto/Roboto-Regular.ttf') format('ttf');
+}

@@ -1,0 +1,24 @@
+.table-box {
+    width: 90%;
+    border-collapse: collapse;
+}
+
+tbody {
+    background-color: blue;
+}
+
+tbody tr {
+    border-radius: 8px !important;
+    height: 62px;
+}
+
+.pendent-task {
+    background-color: #FCFCFC;
+    border: 1px solid #3C424A;
+}
+
+tbody td {
+    border: none;
+    /* border-radius: 8px; */
+    /* background-color: transparent; */
+}
